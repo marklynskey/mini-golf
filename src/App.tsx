@@ -1,53 +1,95 @@
+import { Fragment, useState } from "react";
 import styles from "./App.module.css";
 
-const data = [
+type Player = {
+  id: number;
+  name: string;
+  scores: number[];
+};
+
+const defaultData: Player[] = [
   {
     id: 0,
-    name: "Mark",
-    scores: [3, 4, 5, 6],
+    name: "Player 1",
+    scores: new Array(9).fill(0),
   },
   {
     id: 1,
-    name: "Aine",
-    scores: [6, 5, 4, 3],
+    name: "Player 2",
+    scores: new Array(9).fill(0),
   },
 ];
 
-const selectOptions = (
-  <>
-    <option value={1}>1</option>
-    <option value={2}>2</option>
-    <option value={3}>3</option>
-    <option value={4}>4</option>
-    <option value={5}>5</option>
-    <option value={6}>6</option>
-    <option value={7}>7</option>
-    <option value={8}>8</option>
-    <option value={9}>9</option>
-    <option value={10}>10</option>
-  </>
+const generateSelectOptions = Array.from({ length: 16 }, (_, i) =>
+  i - 5 === 1 ? (
+    <Fragment key={i - 5}>
+      <hr />
+      <option value={i - 5}>{i - 5}</option>
+    </Fragment>
+  ) : (
+    <option key={i - 5} value={i - 5}>
+      {i - 5}
+    </option>
+  ),
 );
 
-const App = () => (
-  <div className={styles.page}>
-    <div className={styles.container}>
-      <h1>Mini golf</h1>
-      <div className={styles.scoresContainer}>
-        {data.map((player) => (
-          <div className={styles.scores} key={player.id}>
-            <h2>{player.name}</h2>
-            <ul className={styles.scoreList}>
-              {player.scores.map((score, index) => (
-                <li className={styles.scoreListItem} key={index}>
-                  <select defaultValue={score}>{selectOptions}</select>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
+const sum = (scores: number[]) =>
+  scores.reduce((accumulator: number, score: number) => accumulator + score, 0);
+
+const App = () => {
+  const [data, setData] = useState<Player[]>(defaultData);
+
+  const updateScore = (playerId: number, hole: number, score: number) => {
+    const newData = data.map((player) => {
+      if (player.id !== playerId) {
+        return player;
+      } else {
+        const scoresCopy = player.scores;
+        scoresCopy[hole] = score;
+
+        return {
+          ...player,
+          scores: scoresCopy,
+        };
+      }
+    });
+
+    setData(newData);
+  };
+
+  return (
+    <div className={styles.page}>
+      <main className={styles.container}>
+        <h1>Mini golf</h1>
+        <div className={styles.scoresContainer}>
+          {data.map((player) => (
+            <div className={styles.scores} key={player.id}>
+              <h2>{player.name}</h2>
+              <ul className={styles.scoreList}>
+                {player.scores.map((score, index) => (
+                  <li className={styles.scoreListItem} key={index}>
+                    <select
+                      value={score}
+                      onChange={(event) =>
+                        updateScore(
+                          player.id,
+                          index,
+                          Number(event.target.value),
+                        )
+                      }
+                    >
+                      {generateSelectOptions}
+                    </select>
+                  </li>
+                ))}
+              </ul>
+              <strong>Total: {sum(player.scores)}</strong>
+            </div>
+          ))}
+        </div>
+      </main>
     </div>
-  </div>
-);
+  );
+};
 
 export default App;
