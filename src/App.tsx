@@ -1,25 +1,6 @@
-import { Fragment, useState } from "react";
-import styles from "./App.module.css";
+import { type ChangeEvent, Fragment, useState } from "react";
 
-type Player = {
-  id: number;
-  name: string;
-  scores: number[];
-};
-
-const defaultData: Player[] = [
-  {
-    id: 0,
-    name: "Player 1",
-    scores: new Array(9).fill(0),
-  },
-  {
-    id: 1,
-    name: "Player 2",
-    scores: new Array(9).fill(0),
-  },
-];
-
+// Generates options from -5 to 10
 const generateSelectOptions = Array.from({ length: 16 }, (_, i) =>
   i - 5 === 1 ? (
     <Fragment key={i - 5}>
@@ -33,61 +14,46 @@ const generateSelectOptions = Array.from({ length: 16 }, (_, i) =>
   ),
 );
 
-const sum = (scores: number[]) =>
-  scores.reduce((accumulator: number, score: number) => accumulator + score, 0);
+// const sum = (scores: number[]) =>
+//   scores.reduce((accumulator: number, score: number) => accumulator + score, 0);
 
 const App = () => {
-  const [data, setData] = useState<Player[]>(defaultData);
+  // const [players, setPlayers] = useState<string[]>(['Player 1', 'Player 2']);
+  const players = ["Player 1", "Player 2"];
 
-  const updateScore = (playerId: number, hole: number, score: number) => {
-    const newData = data.map((player) => {
-      if (player.id !== playerId) {
-        return player;
-      } else {
-        const scoresCopy = player.scores;
-        scoresCopy[hole] = score;
+  const [scores, setScores] = useState<number[][]>([[0, 0]]); // [hole][player]
 
-        return {
-          ...player,
-          scores: scoresCopy,
-        };
-      }
-    });
+  const addHole = () => {
+    const updatedScores = [...scores, [0, 0]];
+    setScores(updatedScores);
+  };
 
-    setData(newData);
+  const updateScores = (holeIndex: number, playerScoreIndex: number, newScore: number) => {
+    const updatedHole = scores[holeIndex].map((playerScore, index) => index === playerScoreIndex ? newScore : playerScore);
+    const updatedScores = scores.map((hole, index) => index === holeIndex ? updatedHole : hole);
+    setScores(updatedScores);
   };
 
   return (
-    <div className={styles.page}>
-      <main className={styles.container}>
+    <div>
         <h1>Mini golf</h1>
-        <div className={styles.scoresContainer}>
-          {data.map((player) => (
-            <div className={styles.scores} key={player.id}>
-              <h2>{player.name}</h2>
-              <ul className={styles.scoreList}>
-                {player.scores.map((score, index) => (
-                  <li className={styles.scoreListItem} key={index}>
-                    <select
-                      value={score}
-                      onChange={(event) =>
-                        updateScore(
-                          player.id,
-                          index,
-                          Number(event.target.value),
-                        )
-                      }
-                    >
+        <div>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <div>Hole</div>
+            {players.map((player) => <div>{player}</div>)}
+          </div>
+          {scores.map((hole, holeIndex) => (
+            <div key={holeIndex} style={{ display: "flex", justifyContent: "space-between" }}>
+                Hole {holeIndex + 1}:
+                {hole.map((playerScore, playerScoreIndex) => (
+                    <select value={playerScore} key={playerScoreIndex} onChange={(event: ChangeEvent<HTMLSelectElement>) => updateScores(holeIndex, playerScoreIndex, parseInt(event.target.value))}>
                       {generateSelectOptions}
                     </select>
-                  </li>
                 ))}
-              </ul>
-              <strong>Total: {sum(player.scores)}</strong>
             </div>
           ))}
         </div>
-      </main>
+        <button onClick={addHole}>Add hole</button>
     </div>
   );
 };
