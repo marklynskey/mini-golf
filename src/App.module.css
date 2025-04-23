@@ -1,31 +1,10 @@
 .page {
   display: flex;
-  justify-content: center;
-  padding: 64px 24px;
-}
-
-.container {
-  border: solid 1px lightgray;
-  border-radius: 12px;
-  width: 100%;
-  max-width: 512px;
-  padding: 24px;
-  display: flex;
   flex-direction: column;
-  gap: 24px;
 }
 
-.scoresContainer {
-  display: flex;
-  gap: 30px;
-}
-
-.scores {
-  flex-grow: 1;
-  border: solid 1px lightgray;
-}
-
-.scoreList {
-  list-style: none;
-  padding: 0;
+.scoreCard {
+  margin: 24px;
+  width: 100%;
+  max-width: 600px;
 }

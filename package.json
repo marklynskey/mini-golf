@@ -11,6 +11,8 @@
     "format": "prettier --write . --ignore-path ./.gitignore"
   },
   "dependencies": {
+    "clsx": "^2.1.1",
+    "infima": "^0.2.0-alpha.45",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },

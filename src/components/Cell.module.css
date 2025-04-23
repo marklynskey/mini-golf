@@ -1,0 +1,12 @@
+.cell {
+  border: solid 1px cyan;
+}
+
+.score {
+  flex-grow: 1;
+}
+
+.hole {
+  width: 23%;
+  flex-shrink: 0;
+}
