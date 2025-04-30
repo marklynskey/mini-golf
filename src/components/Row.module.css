@@ -1,5 +1,19 @@
 .row {
   display: flex;
-  gap: 12px;
-  border: solid 1px magenta;
+  gap: var(--ifm-global-spacing);
+  padding: var(--ifm-global-spacing);
+}
+
+.row:nth-child(even) {
+  background-color: var(--ifm-color-emphasis-100);
+}
+
+.isHeader {
+  font-weight: bold;
+  border-bottom: solid var(--ifm-alert-border-left-width)
+    var(--ifm-color-primary);
+}
+
+.isTotals {
+  font-weight: bold;
 }

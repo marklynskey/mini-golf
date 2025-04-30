@@ -1,10 +1,26 @@
 .page {
   display: flex;
-  flex-direction: column;
+  justify-content: center;
+  /* padding: var(--ifm-global-spacing); */
 }
 
-.scoreCard {
-  margin: 24px;
+.content {
+  display: flex;
+  flex-direction: column;
   width: 100%;
-  max-width: 600px;
+  gap: var(--ifm-global-spacing);
+  max-width: 652px;
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.totalsCard {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
 }

@@ -7,7 +7,9 @@ interface CellProps extends DivComponentProps {
 }
 
 const Cell = ({ children, variant = "score", ...restProps }: CellProps) => (
-  <div className={clsx(styles.cell, styles[variant])} {...restProps}>{children}</div>
+  <div className={clsx(styles.cell, styles[variant])} {...restProps}>
+    {children}
+  </div>
 );
 
 export default Cell;

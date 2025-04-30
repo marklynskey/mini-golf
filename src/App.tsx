@@ -1,6 +1,6 @@
 import { type ChangeEvent, Fragment, useState } from "react";
 import styles from "./App.module.css";
-import clsx from 'clsx';
+import clsx from "clsx";
 import Row from "./components/Row";
 import Cell from "./components/Cell";
 
@@ -32,9 +32,17 @@ const App = () => {
     setHoles(updatedHoles);
   };
 
-  const updateHoles = (holeIndex: number, playerScoreIndex: number, newScore: number) => {
-    const updatedHole = holes[holeIndex].map((playerScore, index) => index === playerScoreIndex ? newScore : playerScore);
-    const updatedHoles = holes.map((hole, index) => index === holeIndex ? updatedHole : hole);
+  const updateHoles = (
+    holeIndex: number,
+    playerScoreIndex: number,
+    newScore: number,
+  ) => {
+    const updatedHole = holes[holeIndex].map((playerScore, index) =>
+      index === playerScoreIndex ? newScore : playerScore,
+    );
+    const updatedHoles = holes.map((hole, index) =>
+      index === holeIndex ? updatedHole : hole,
+    );
     setHoles(updatedHoles);
   };
 
@@ -44,42 +52,66 @@ const App = () => {
   };
 
   return (
-    <div className={styles.page}>
-      <div className={clsx("card shadow--md", styles.scoreCard)}>
-        <div className="card__header">
-          <h1>Mini golf</h1>
-        </div>
-        <div className="card__body">
-          <Row>
-            <Cell variant="hole">Hole:</Cell>
-            {players.map((player) => <Cell key={player}>{player}</Cell>)}
-          </Row>
-          {holes.map((hole, holeIndex) => (
-            <Row key={holeIndex}>
-                <Cell variant="hole">Hole {holeIndex + 1}</Cell>
-                {hole.map((playerScore, playerScoreIndex) => (
-                  <Cell key={playerScoreIndex}>
-                    <select value={playerScore} onChange={(event: ChangeEvent<HTMLSelectElement>) => updateHoles(holeIndex, playerScoreIndex, parseInt(event.target.value))}>
-                      {selectOptions}
-                    </select>
-                  </Cell>
+    <>
+      <div className={styles.page}>
+        <div className={styles.content}>
+          <div className="card shadow--md">
+            <div className="card__body padding--none">
+              <Row isHeader>
+                <Cell variant="hole">Hole:</Cell>
+                {players.map((player) => (
+                  <Cell key={player}>{player}</Cell>
                 ))}
-            </Row>
-          ))}
+              </Row>
+              {holes.map((hole, holeIndex) => (
+                <Row key={holeIndex}>
+                  <Cell variant="hole">Hole {holeIndex + 1}</Cell>
+                  {hole.map((playerScore, playerScoreIndex) => (
+                    <Cell key={playerScoreIndex}>
+                      <select
+                        value={playerScore}
+                        onChange={(event: ChangeEvent<HTMLSelectElement>) =>
+                          updateHoles(
+                            holeIndex,
+                            playerScoreIndex,
+                            parseInt(event.target.value),
+                          )
+                        }
+                      >
+                        {selectOptions}
+                      </select>
+                    </Cell>
+                  ))}
+                </Row>
+              ))}
+            </div>
+          </div>
+          {/* card was here */}
         </div>
       </div>
-      <div className={clsx("card shadow--md", styles.scoreCard)}>
-        <div className="card__body">
-          <Row>
-            <Cell variant="hole">Totals:</Cell>
-            {players.map((_, playerIndex) => <Cell>{getPlayerTotal(playerIndex)}</Cell>)}
-          </Row>
+      <footer className={styles.footer}>
+        <div className={styles.content}>
+          <div className={clsx("card shadow--md", styles.totalsCard)}>
+            <div className="card__body">
+              <Row isTotals>
+                <Cell variant="hole">Totals:</Cell>
+                {players.map((_, playerIndex) => (
+                  <Cell>{getPlayerTotal(playerIndex)}</Cell>
+                ))}
+              </Row>
+            </div>
+            <div className="card__footer">
+              <button
+                onClick={addHole}
+                className="button button--primary button--block"
+              >
+                Add hole
+              </button>
+            </div>
+          </div>
         </div>
-        <div className="card__footer">
-          <button onClick={addHole} className="button button--primary button--block">Add hole</button>
-        </div>
-      </div>
-    </div>
+      </footer>
+    </>
   );
 };
 
