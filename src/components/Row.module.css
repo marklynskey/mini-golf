@@ -1,5 +1,6 @@
 .row {
   display: flex;
+  align-items: center;
   gap: var(--ifm-global-spacing);
   padding: var(--ifm-global-spacing);
 }

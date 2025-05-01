@@ -3,6 +3,8 @@ import styles from "./App.module.css";
 import clsx from "clsx";
 import Row from "./components/Row";
 import Cell from "./components/Cell";
+import DeleteButton from "./components/DeleteButton";
+import ScoreCard from "./components/ScoreCard";
 
 // Options from -5 to 10
 const selectOptions = Array.from({ length: 16 }, (_, i) =>
@@ -46,6 +48,11 @@ const App = () => {
     setHoles(updatedHoles);
   };
 
+  const removeHole = (holeIndex: number) => {
+    const updatedHoles = holes.toSpliced(holeIndex, 1);
+    setHoles(updatedHoles);
+  };
+
   const getPlayerTotal = (playerIndex: number) => {
     const scores = holes.map((hole) => hole[playerIndex]);
     return sum(scores);
@@ -55,37 +62,38 @@ const App = () => {
     <>
       <div className={styles.page}>
         <div className={styles.content}>
-          <div className="card shadow--md">
-            <div className="card__body padding--none">
-              <Row isHeader>
-                <Cell variant="hole">Hole:</Cell>
-                {players.map((player) => (
-                  <Cell key={player}>{player}</Cell>
-                ))}
-              </Row>
-              {holes.map((hole, holeIndex) => (
-                <Row key={holeIndex}>
-                  <Cell variant="hole">Hole {holeIndex + 1}</Cell>
-                  {hole.map((playerScore, playerScoreIndex) => (
-                    <Cell key={playerScoreIndex}>
-                      <select
-                        value={playerScore}
-                        onChange={(event: ChangeEvent<HTMLSelectElement>) =>
-                          updateHoles(
-                            holeIndex,
-                            playerScoreIndex,
-                            parseInt(event.target.value),
-                          )
-                        }
-                      >
-                        {selectOptions}
-                      </select>
-                    </Cell>
-                  ))}
-                </Row>
+          <ScoreCard>
+            <Row isHeader>
+              <Cell>Hole:</Cell>
+              {players.map((player) => (
+                <Cell key={player}>{player}</Cell>
               ))}
-            </div>
-          </div>
+              <DeleteButton isSpacer />
+            </Row>
+            {holes.map((hole, holeIndex) => (
+              <Row key={holeIndex}>
+                <Cell>Hole {holeIndex + 1}</Cell>
+                {hole.map((playerScore, playerScoreIndex) => (
+                  <Cell key={playerScoreIndex}>
+                    <select
+                      className="button button--secondary"
+                      value={playerScore}
+                      onChange={(event: ChangeEvent<HTMLSelectElement>) =>
+                        updateHoles(
+                          holeIndex,
+                          playerScoreIndex,
+                          parseInt(event.target.value),
+                        )
+                      }
+                    >
+                      {selectOptions}
+                    </select>
+                  </Cell>
+                ))}
+                <DeleteButton onClick={() => removeHole(holeIndex)} />
+              </Row>
+            ))}
+          </ScoreCard>
           {/* card was here */}
         </div>
       </div>
@@ -94,10 +102,11 @@ const App = () => {
           <div className={clsx("card shadow--md", styles.totalsCard)}>
             <div className="card__body">
               <Row isTotals>
-                <Cell variant="hole">Totals:</Cell>
+                <Cell>Totals:</Cell>
                 {players.map((_, playerIndex) => (
-                  <Cell>{getPlayerTotal(playerIndex)}</Cell>
+                  <Cell key={playerIndex}>{getPlayerTotal(playerIndex)}</Cell>
                 ))}
+                <DeleteButton isSpacer />
               </Row>
             </div>
             <div className="card__footer">

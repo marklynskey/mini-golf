@@ -1,0 +1,12 @@
+.scoreCard {
+  margin: var(--ifm-global-spacing) var(--ifm-global-spacing)
+    calc(150px + var(--ifm-global-spacing));
+}
+
+@media (max-width: 576px) {
+  .scoreCard {
+    box-shadow: none !important;
+    border-radius: 0;
+    margin: 0 0 calc(150px + var(--ifm-global-spacing));
+  }
+}
